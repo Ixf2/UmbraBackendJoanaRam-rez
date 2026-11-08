@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "usuario")
@@ -41,6 +43,9 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Notificacion> notificaciones = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "personaje_compartido", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_personaje"))
+    private Set<Personaje> personajesCompartidos = new HashSet<>();
 
 
     public Usuario() {
@@ -56,6 +61,13 @@ public class Usuario {
         this.tema = tema;
     }
 
+    public Set<Personaje> getPersonajesCompartidos() {
+        return personajesCompartidos;
+    }
+
+    public void setPersonajesCompartidos(Set<Personaje> personajesCompartidos) {
+        this.personajesCompartidos = personajesCompartidos;
+    }
     public Integer getIdUsuario() {
         return idUsuario;
     }

@@ -9,5 +9,4 @@ class UmbraBackendApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

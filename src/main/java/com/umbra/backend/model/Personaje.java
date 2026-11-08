@@ -2,7 +2,8 @@
 package com.umbra.backend.model;
 
 import jakarta.persistence.*;
-
+import java.util.Set;
+import java.util.HashSet;
 import java.time.LocalDateTime;
 
 @Entity
@@ -54,6 +55,9 @@ public class Personaje {
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
+    @ManyToMany(mappedBy = "personajesCompartidos", fetch = FetchType.LAZY)
+    private Set<Usuario> usuariosConAcceso = new HashSet<>();
+
     public Personaje(){}
 
     public Personaje(String nombre, String historia, String personalidad, String imagen, Integer fuerza, Integer destreza, Integer inteligencia, Integer carisma, String visibilidad, Usuario usuarioCreador, Categoria categoria){
@@ -74,6 +78,13 @@ public class Personaje {
         return idPersonaje;
     }
 
+    public Set<Usuario> getUsuariosConAcceso() {
+        return usuariosConAcceso;
+    }
+
+    public void setUsuariosConAcceso(Set<Usuario> usuariosConAcceso) {
+        this.usuariosConAcceso = usuariosConAcceso;
+    }
     public String getNombre() {
         return nombre;
     }
