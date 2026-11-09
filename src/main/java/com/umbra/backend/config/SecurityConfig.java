@@ -1,6 +1,7 @@
 package com.umbra.backend.config;
 
 import jakarta.servlet.DispatcherType;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -42,9 +43,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
 
                 )
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(basic -> basic
+                        .authenticationEntryPoint((request, response, exception) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        })
+                );
 
-        return http.build();
+                return http.build();
     }
 
     @Bean
