@@ -34,6 +34,9 @@ public class Usuario {
     @Column(name = "tema", length = 50)
     private String tema;
 
+    @Column(name = "rol", nullable = false, length = 20)
+    private String rol = "USER";
+
     @OneToMany(mappedBy = "usuarioCreador")
     private List<Personaje> personajes = new ArrayList<>();
 
@@ -52,13 +55,22 @@ public class Usuario {
     }
 
     public Usuario(String nombreUsuario, String email,
-                   String password, String avatar, String tema) {
+                   String password, String avatar, String tema, String rol) {
 
         this.nombreUsuario = nombreUsuario;
         this.email = email;
         this.password = password;
         this.avatar = avatar;
         this.tema = tema;
+        this.rol = rol;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 
     public Set<Personaje> getPersonajesCompartidos() {
@@ -68,6 +80,7 @@ public class Usuario {
     public void setPersonajesCompartidos(Set<Personaje> personajesCompartidos) {
         this.personajesCompartidos = personajesCompartidos;
     }
+
     public Integer getIdUsuario() {
         return idUsuario;
     }
@@ -139,8 +152,6 @@ public class Usuario {
     public void setNotificaciones(List<Notificacion> notificaciones) {
         this.notificaciones = notificaciones;
     }
-
-
 
 
 }
