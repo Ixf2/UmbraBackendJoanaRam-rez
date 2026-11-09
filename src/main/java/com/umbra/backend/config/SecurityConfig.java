@@ -1,5 +1,6 @@
 package com.umbra.backend.config;
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,12 +23,18 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/api/**")
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/personajes/publicos",
                                 "/api/personajes/{id}"
                         ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/auth/register"
+                        ).permitAll()
                         .anyRequest().authenticated()
+
                 )
                 .httpBasic(Customizer.withDefaults());
 
