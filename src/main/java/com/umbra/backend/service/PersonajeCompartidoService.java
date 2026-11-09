@@ -49,15 +49,15 @@ public class PersonajeCompartidoService {
                 );
     }
 
-    private void comprobarPropietario(
-            Personaje personaje,
-            Usuario usuarioAutenticado) {
+    private void comprobarPropietario(Personaje personaje, Usuario usuarioAutenticado) {
 
-        Integer idPropietario =
-                personaje.getUsuarioCreador().getIdUsuario();
+        Integer idPropietario = personaje.getUsuarioCreador().getIdUsuario();
 
-        if (!idPropietario.equals(usuarioAutenticado.getIdUsuario())) {
+        boolean esPropietario = idPropietario.equals(usuarioAutenticado.getIdUsuario());
 
+        boolean esAdministrador = "ADMIN".equals(usuarioAutenticado.getRol());
+
+        if (!esPropietario && !esAdministrador) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "No tienes permiso sobre este personaje"
