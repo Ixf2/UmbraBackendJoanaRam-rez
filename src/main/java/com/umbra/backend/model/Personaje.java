@@ -113,7 +113,7 @@ public class Personaje {
         return imagen;
     }
 
-    public void setImage(String imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
     }
 

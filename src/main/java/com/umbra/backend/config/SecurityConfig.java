@@ -24,7 +24,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/api/personajes/publicos"
+                                "/api/personajes/publicos",
+                                "/api/personajes/{id}"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

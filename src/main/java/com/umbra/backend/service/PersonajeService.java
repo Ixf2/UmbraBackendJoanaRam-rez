@@ -5,17 +5,23 @@ import com.umbra.backend.repository.PersonajeRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.umbra.backend.dto.PersonajeRequest;
+import com.umbra.backend.model.Categoria;
+import com.umbra.backend.model.Usuario;
+import com.umbra.backend.repository.CategoriaRepository;
+import com.umbra.backend.repository.UsuarioRepository;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
 public class PersonajeService {
 
     private final PersonajeRepository personajeRepository;
+    private final CategoriaRepository categoriaRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public PersonajeService(PersonajeRepository personajeRepository) {
-        this.personajeRepository = personajeRepository;
-    }
 
     @Transactional(readOnly = true)
     public List<Personaje> obtenerTodos() {
@@ -31,7 +37,15 @@ public class PersonajeService {
                         )
                 );
     }
+    public PersonajeService(
+            PersonajeRepository personajeRepository,
+            CategoriaRepository categoriaRepository,
+            UsuarioRepository usuarioRepository) {
 
+        this.personajeRepository = personajeRepository;
+        this.categoriaRepository = categoriaRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
     @Transactional(readOnly = true)
     public List<Personaje> obtenerPublicos() {
         return personajeRepository.findByVisibilidad("publico");
@@ -65,5 +79,81 @@ public class PersonajeService {
                         personaje.getVisibilidad()
                 ))
                 .toList();
+    }
+
+    @Transactional
+    public PersonajeResponse crearPersonaje(
+            PersonajeRequest request,
+            String emailAutenticado) {
+
+        Usuario usuario = usuarioRepository.findByEmail(emailAutenticado)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "Usuario no encontrado"
+                ));
+
+        Categoria categoria = categoriaRepository.findById(request.idCategoria())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Categoría no encontrada"
+                ));
+
+        Personaje personaje = new Personaje(
+                request.nombre(),
+                request.historia(),
+                request.personalidad(),
+                request.imagen(),
+                request.fuerza(),
+                request.destreza(),
+                request.inteligencia(),
+                request.carisma(),
+                request.visibilidad(),
+                usuario,
+                categoria
+        );
+
+        Personaje guardado = personajeRepository.save(personaje);
+
+        return new PersonajeResponse(
+                guardado.getIdPersonaje(),
+                guardado.getNombre(),
+                guardado.getHistoria(),
+                guardado.getPersonalidad(),
+                guardado.getImagen(),
+                guardado.getFuerza(),
+                guardado.getDestreza(),
+                guardado.getInteligencia(),
+                guardado.getCarisma(),
+                guardado.getVisibilidad()
+        );
+    }
+    @Transactional(readOnly = true)
+    public PersonajeResponse obtenerPublicoPorId(Integer id) {
+
+        Personaje personaje = personajeRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Personaje no encontrado"
+                ));
+
+        if (!"publico".equals(personaje.getVisibilidad())) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Personaje no encontrado"
+            );
+        }
+
+        return new PersonajeResponse(
+                personaje.getIdPersonaje(),
+                personaje.getNombre(),
+                personaje.getHistoria(),
+                personaje.getPersonalidad(),
+                personaje.getImagen(),
+                personaje.getFuerza(),
+                personaje.getDestreza(),
+                personaje.getInteligencia(),
+                personaje.getCarisma(),
+                personaje.getVisibilidad()
+        );
     }
 }
