@@ -1,9 +1,10 @@
+
 package com.umbra.backend.controller;
 
 import com.umbra.backend.dto.PersonajeRequest;
 import com.umbra.backend.dto.PersonajeResponse;
 import com.umbra.backend.service.PersonajeService;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -27,10 +28,14 @@ public class PersonajeController {
     public List<PersonajeResponse> obtenerPublicos() {
         return personajeService.obtenerPublicosDTO();
     }
+
     @GetMapping("/{id}")
-    public PersonajeResponse obtenerPorId(@PathVariable Integer id) {
+    public PersonajeResponse obtenerPorId(
+            @PathVariable Integer id) {
+
         return personajeService.obtenerPublicoPorId(id);
     }
+
     @PostMapping
     public ResponseEntity<PersonajeResponse> crearPersonaje(
             @Valid @RequestBody PersonajeRequest request,
@@ -41,6 +46,36 @@ public class PersonajeController {
                 authentication.getName()
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(personaje);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(personaje);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonajeResponse> actualizarPersonaje(
+            @PathVariable Integer id,
+            @Valid @RequestBody PersonajeRequest request,
+            Authentication authentication) {
+
+        PersonajeResponse personaje = personajeService.actualizarPersonaje(
+                id,
+                request,
+                authentication.getName()
+        );
+
+        return ResponseEntity.ok(personaje);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarPersonaje(
+            @PathVariable Integer id,
+            Authentication authentication) {
+
+        personajeService.eliminarPersonaje(
+                id,
+                authentication.getName()
+        );
+
+        return ResponseEntity.noContent().build();
     }
 }
