@@ -28,6 +28,14 @@ public class PersonajeController {
     public List<PersonajeResponse> obtenerPublicos() {
         return personajeService.obtenerPublicosDTO();
     }
+    @GetMapping("/mios")
+    public List<PersonajeResponse> obtenerMisPersonajes(
+            Authentication authentication) {
+
+        return personajeService.obtenerMisPersonajes(
+                authentication.getName()
+        );
+    }
 
     @GetMapping("/{id}")
     public PersonajeResponse obtenerPorId(

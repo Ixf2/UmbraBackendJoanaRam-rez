@@ -1,6 +1,10 @@
+
 package com.umbra.backend.dto;
 
+import java.util.List;
+
 public record PersonajeResponse(
+
         Integer idPersonaje,
         String nombre,
         String historia,
@@ -10,6 +14,15 @@ public record PersonajeResponse(
         Integer destreza,
         Integer inteligencia,
         Integer carisma,
-        String visibilidad
+        String visibilidad,
+        Integer idCategoria,
+        String clase,
+        String raza,
+        Integer nivel,
+        String origen,
+        List<String> rasgos,
+        Integer retrato,
+        Boolean favorito
+
 ) {
 }

@@ -1,11 +1,9 @@
+
 package com.umbra.backend.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+
+import java.util.List;
 
 public record PersonajeRequest(
 
@@ -47,7 +45,33 @@ public record PersonajeRequest(
         String visibilidad,
 
         @NotNull
-        @Min(1)
-        Integer idCategoria
+        @Positive
+        Integer idCategoria,
 
-) {}
+        @Size(max = 50)
+        String clase,
+
+        @Size(max = 50)
+        String raza,
+
+        @NotNull
+        @Min(1)
+        @Max(20)
+        Integer nivel,
+
+        @Size(max = 100)
+        String origen,
+
+        @Size(max = 6)
+        List<@NotBlank @Size(max = 40) String> rasgos,
+
+        @NotNull
+        @Min(0)
+        @Max(5)
+        Integer retrato,
+
+        @NotNull
+        Boolean favorito
+
+) {
+}
